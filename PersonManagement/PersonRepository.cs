@@ -11,7 +11,10 @@ public class PersonRepository
 
     public void AddPersons(IEnumerable<Person> persons)
     {
-
+        foreach (var person in persons)
+        {
+            this.persons.Add(person);
+        }
     }
 
     public void PrintPersons(TextWriter textWriter)

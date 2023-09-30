@@ -1,7 +1,7 @@
 ﻿using PersonManagement;
+using System.Text.Json;
 
 PersonRepository personRepository = new PersonRepository();
-IEnumerable<Person>? persons = new List<Person>();
 
 try
 {
@@ -9,7 +9,21 @@ try
 	// TODO
 	//
 
-	var reader = new StreamReader("persons.json");
+	using (var reader = new StreamReader("persons.json"))
+	{
+		var json = reader.ReadToEnd();
+		var persons = JsonSerializer.Deserialize<IEnumerable<Person>>(json, new JsonSerializerOptions()
+		{
+			PropertyNameCaseInsensitive = true
+		});
+
+		if (persons is null)
+		{
+			throw new Exception("Problem with deserialization");
+		}
+
+		personRepository.AddPersons(persons);
+	} // .Dispose()
 }
 catch (FileNotFoundException fnfEx)
 {
